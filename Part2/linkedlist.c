@@ -59,43 +59,40 @@ int insert_start(struct list *l, int val)
    Return 0 on failure and 1 on success. */
 int insert_end(struct list *l, int val)
 {
-  struct node *n = NULL;
-  if ((n = (struct node *)malloc(sizeof(struct node))) == 0)
-    return 0;
+  struct node *n = malloc(sizeof *n);
+  if (!n) return 0;
   n->val = val;
+  n->next = NULL;                      
 
-  if (l->first != NULL)
-  {
-    n->prev = l->last;
-    n->next = NULL;
-    l->last = n;
-  }
-  else
-  {
-    n->next = n->prev = NULL;
+  if (l->first != NULL) {
+    n->prev = l->last;                
+    l->last->next = n;                 
+    l->last = n;                        
+  } else {
+    n->prev = NULL;                     
     l->first = l->last = n;
   }
-
   return 1;
 }
+
 
 /* Create a node with value val and put it in the list after node n.
    Return 0 on failure and 1 on success. */
 int insert_after(struct list *l, struct node *n, int val)
 {
-  struct node *m = NULL;
-  if ((m = (struct node *)malloc(sizeof(struct node))) == 0)
-    return 0;
+  struct node *m = malloc(sizeof *m);
+  if (!m) return 0;
   m->val = val;
-  m->next = n->next;
-  if (l->last == n)
-    l->last = m;
-  else
-    n->next->prev = m;
-  n->next = m;
+  m->prev = n;                   
+  m->next = n->next;             
 
+  if (l->last == n) l->last = m; 
+  else n->next->prev = m;        
+
+  n->next = m;                   
   return 1;
 }
+
 
 /* Create a node with value val and put it in the list before node n.
    Return 0 on failure and 1 on success. */
