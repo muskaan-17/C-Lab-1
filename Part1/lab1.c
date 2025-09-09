@@ -61,7 +61,8 @@ void part1() {
 
   // Q1: The following line is an example. Feel free to
   // copy and/or modify it as needed for part 1 of this lab.
-  printf("x & x = %i\n %x", x & x, &x);
+  printf("x & x = %d\n", x & x);
+  printf("address of x = %p\n", (void*)&x);
 }
 
 // HELPER FUNCTION - fillArray()
@@ -108,6 +109,7 @@ void part2() {
 
   // Q2.1: What happens if the second argument is greater
   // than the size of the array (10)?
+  // it writes past the end of the array(undefined behaviour)
   fillArray(array, 10);
 
   int value = 295;
@@ -120,7 +122,10 @@ void part2() {
   // Q2.2: Here we use the address of the variable "value"
   // as if it were an array of a single element. What data
   // is stored in value after the following code executes?
-  // Explain why the result is what it is.
+  // Explain why the result is what it is
+// value becomes 2. The function sets array[i] = i*3 + 2; with len=1,
+// only i=0 runs, so value is assigned 0*3+2 = 2.
+// Using &value as a 1-element array is legal because it points to a single int.
   fillArray(&value, 1);
 }
 
@@ -184,7 +189,7 @@ void part3() {
   // Order of operations can be confusing, so parentheses
   // generally improve readability.
 
-  // assert( student == 8 );
+  assert(((int*)&student)[2] == 8);
 }
 
 // HELPER FUNCTION - bigArrayIndex()
@@ -220,10 +225,10 @@ void part4() {
   // Q4.1: Try changing the order of the loops (switch the
   // "for" lines). The original ordering below is
   // considered "ijk".  Which loop orderings are fastest?
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j < SIZE; j++) {
-      for (int k = 0; k < SIZE; k++) {
-        bigArray[bigArrayIndex(i, j, k)] = i + j + k;
+  for (int k = 0; k < SIZE; k++){
+	for (int j = 0; j < SIZE; j++){
+    		for (int i = 0; i < SIZE; i++){
+        		bigArray[bigArrayIndex(i, j, k)] = i + j + k;
       }
     }
   }
@@ -260,6 +265,9 @@ void part5() {
   // Valgrind is a tool for analyzing how programs
   // use memory, which is often invaluable for C and
   // C++ programming.
+//With free: “Valgrind shows no leaks (all heap blocks freed).”
+//Without free: “Valgrind reports a definite leak of ~80 bytes 
+//(5 × sizeof(Scores)), because the memory allocated by malloc was never freed.”
   free(class_grades);
 }
 
