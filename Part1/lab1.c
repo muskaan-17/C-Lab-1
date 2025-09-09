@@ -225,7 +225,9 @@ void part4() {
   // Q4.1: Try changing the order of the loops (switch the
   // "for" lines). The original ordering below is
   // considered "ijk".  Which loop orderings are fastest?
-  for (int k = 0; k < SIZE; k++){
+  //Observed: ijk (k innermost) faster than kji
+  // due to contiguous row-major access
+ for (int k = 0; k < SIZE; k++){
 	for (int j = 0; j < SIZE; j++){
     		for (int i = 0; i < SIZE; i++){
         		bigArray[bigArrayIndex(i, j, k)] = i + j + k;
